@@ -115,12 +115,10 @@ if __name__ == '__main__':
 
     # calculate camera distortion
     rms, camera_matrix, dist_coefs, rvecs, tvecs = cv2.calibrateCamera(obj_points, img_points, (w, h), None, None)
-
     print("\nRMS:", rms)
     print("camera matrix:\n", camera_matrix)
     # print("matrix: \n", type(camera_matrix))
     print("distortion coefficients: ", dist_coefs.ravel())
-
     # write to matrix to be used as input
     with open(os.path.join(out, "matrix.txt"), "w") as matf:
         camera_matrix.reshape((3, 3))
@@ -134,6 +132,9 @@ if __name__ == '__main__':
         img = cv2.imread(img_found)
 
         h,  w = img.shape[:2]
+        print("camera_matrix:",camera_matrix)
+        print("dist_coef:",dist_coefs)
+        print("h",h)
         newcameramtx, roi = cv2.getOptimalNewCameraMatrix(camera_matrix, dist_coefs, (w, h), 1, (w, h))
 
         dst = cv2.undistort(img, camera_matrix, dist_coefs, None, newcameramtx)
@@ -146,4 +147,3 @@ if __name__ == '__main__':
         cv2.imwrite(outfile, dst)
         print('Undistorted image written to: %s' % outfile)
 
-    cv2.destroyAllWindows()
